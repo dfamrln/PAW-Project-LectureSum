@@ -1,4 +1,4 @@
-const materiModel = require('../models/materiModel');
+const materiModel = require('../models/productModel');
 
 const renderDashboard = (req, res) => {
     const daftarMateri = materiModel.getAllMateri();

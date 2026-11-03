@@ -1,4 +1,4 @@
-const materiModel = require('../models/materiModel');
+const materiModel = require('../models/productModel');
 
 const getStatus = (req, res) => {
     res.json({
