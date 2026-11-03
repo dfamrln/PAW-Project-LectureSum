@@ -1,0 +1,2 @@
+// appConfig.js
+module.exports = {};
