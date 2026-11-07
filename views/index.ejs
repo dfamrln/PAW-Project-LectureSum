@@ -7,54 +7,34 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-50 text-gray-800 font-sans min-h-screen flex justify-center py-8">
-
     <div class="w-full max-w-5xl bg-white shadow-sm border border-gray-200">
-        <!-- Navbar -->
         <div class="flex justify-between items-center px-8 py-4 border-b border-gray-200">
             <h1 class="text-xl font-bold text-gray-900">Lecture Sum</h1>
             <span class="text-sm text-gray-500">Akun Dosen</span>
         </div>
-
-        <!-- Content -->
         <div class="p-8">
             <div class="flex justify-between items-start mb-6">
                 <div>
                     <h2 class="text-2xl font-bold text-gray-900 mb-1">Dashboard Materi</h2>
                     <p class="text-gray-500 text-sm">Kelola rekaman, draf, dan ringkasan perkuliahan Anda.</p>
                 </div>
-                <button class="bg-gray-800 text-white px-4 py-2 rounded text-sm font-medium hover:bg-gray-900 transition">
-                    + Tambah Materi
-                </button>
+                <a href="/form" class="bg-gray-800 text-white px-4 py-2 rounded text-sm font-medium hover:bg-gray-900 transition">+ Tambah Materi</a>
             </div>
 
-            <!-- Filters -->
-            <div class="flex gap-4 mb-6">
-                <div class="w-2/3">
-                    <label class="block text-xs font-bold text-gray-700 mb-1">Cari materi</label>
-                    <input type="text" placeholder="Cari judul atau mata kuliah..." class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-gray-500">
-                </div>
-                <div class="w-1/3">
-                    <label class="block text-xs font-bold text-gray-700 mb-1">Filter status</label>
-                    <select class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-gray-500 text-gray-500">
-                        <option>Semua status</option>
-                        <option>Draf</option>
-                        <option>Terbit</option>
-                    </select>
-                </div>
-            </div>
-
-            <!-- Table -->
             <div class="border border-gray-200 rounded-sm mb-6">
                 <table class="w-full text-left border-collapse">
                     <thead>
                         <tr class="bg-gray-100 text-xs text-gray-600 uppercase">
-                            <th class="px-4 py-3 font-semibold w-1/2">Materi</th>
+                            <th class="px-4 py-3 font-semibold w-2/5">Materi</th>
                             <th class="px-4 py-3 font-semibold text-center w-1/6">Pertemuan</th>
                             <th class="px-4 py-3 font-semibold text-center w-1/6">Status</th>
-                            <th class="px-4 py-3 font-semibold text-center w-1/6">Aksi</th>
+                            <th class="px-4 py-3 font-semibold text-center w-1/4">Aksi</th>
                         </tr>
                     </thead>
                     <tbody class="text-sm">
+                        <% if(materi.length === 0) { %>
+                            <tr><td colspan="4" class="text-center py-4 text-gray-500">Belum ada data materi.</td></tr>
+                        <% } %>
                         <% materi.forEach(item => { %>
                             <tr class="border-t border-gray-200">
                                 <td class="px-4 py-4">
@@ -62,33 +42,27 @@
                                     <p class="text-gray-500 text-xs"><%= item.mata_kuliah %></p>
                                 </td>
                                 <td class="px-4 py-4 text-center"><%= item.pertemuan %></td>
-                                <td class="px-4 py-4 text-center"><%= item.status %></td>
                                 <td class="px-4 py-4 text-center">
-                                    <button class="border border-gray-400 text-gray-700 px-3 py-1 text-xs hover:bg-gray-100">
-                                        <%= item.aksi %>
-                                    </button>
+                                    <span class="<%= item.status === 'Terbit' ? 'text-green-600' : 'text-gray-500' %> font-semibold"><%= item.status %></span>
+                                </td>
+                                <td class="px-4 py-4 text-center flex justify-center gap-2">
+                                    <a href="/form?id=<%= item.id %>" class="border border-blue-400 text-blue-600 px-3 py-1 text-xs hover:bg-blue-50">Edit</a>
+                                    <button onclick="hapusMateri(<%= item.id %>)" class="border border-red-400 text-red-600 px-3 py-1 text-xs hover:bg-red-50">Hapus</button>
                                 </td>
                             </tr>
                         <% }) %>
                     </tbody>
                 </table>
             </div>
-
-            <!-- Info Box -->
-            <div class="bg-gray-100 p-4 border border-gray-200 rounded-sm text-sm">
-                <p class="font-bold text-gray-800 mb-1">Draf hanya terlihat oleh dosen.</p>
-                <p class="text-gray-600">Ringkasan tersedia bagi mahasiswa setelah dosen memvalidasi dan menerbitkannya.</p>
-            </div>
-
-            <!-- Endpoint Check Links (Khusus untuk pengecekan dosen/asisten) -->
-            <div class="mt-10 flex gap-4 pt-6 border-t border-gray-200">
-                <a href="/api/status" target="_blank" class="text-blue-600 text-sm hover:underline">Cek GET /api/status</a>
-                <a href="/api/produk" target="_blank" class="text-blue-600 text-sm hover:underline">Cek GET /api/produk (Data JSON)</a>
-            </div>
-            
-            <p class="text-xs text-gray-400 mt-4 uppercase tracking-wider">Kelompok 2 / Pengembangan Aplikasi Web</p>
         </div>
     </div>
-
+    <script>
+        async function hapusMateri(id) {
+            if(confirm('Yakin menghapus materi ini?')) {
+                const response = await fetch(`/api/materi/${id}`, { method: 'DELETE' });
+                if(response.ok) window.location.reload();
+            }
+        }
+    </script>
 </body>
 </html>
