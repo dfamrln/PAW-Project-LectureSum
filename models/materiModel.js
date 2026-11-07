@@ -1,24 +1,26 @@
-const materiData = [
-    { 
-        id: 1, 
-        judul: "UI/UX dan Wireframing", 
-        mata_kuliah: "Pengembangan Aplikasi Web", 
-        pertemuan: 4, 
-        status: "Draf",
-        aksi: "Tinjau"
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/appConfig');
+
+const Materi = sequelize.define('Materi', {
+    judul: {
+        type: DataTypes.STRING,
+        allowNull: false
     },
-    { 
-        id: 2, 
-        judul: "Layout Responsif", 
-        mata_kuliah: "Pengembangan Aplikasi Web", 
-        pertemuan: 3, 
-        status: "Terbit",
-        aksi: "Lihat"
+    mata_kuliah: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    pertemuan: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    status: {
+        type: DataTypes.ENUM('Draf', 'Terbit'),
+        defaultValue: 'Draf'
     }
-];
+}, {
+    tableName: 'materi',
+    timestamps: true 
+});
 
-const getAllMateri = () => {
-    return materiData;
-};
-
-module.exports = { getAllMateri };
+module.exports = Materi;
