@@ -12,7 +12,13 @@ const Materi = sequelize.define('Materi', {
     },
     pertemuan: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
+        validate: {
+            min: {
+                args: [1],
+                msg: "Nilai pertemuan minimal adalah 1"
+            }
+        }
     },
     status: {
         type: DataTypes.ENUM('Draf', 'Terbit'),
