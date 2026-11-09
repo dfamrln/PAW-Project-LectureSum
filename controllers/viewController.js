@@ -1,12 +1,27 @@
-const express = require('express');
-const router = express.Router();
-const apiController = require('../controllers/apiController');
+const Materi = require('../models/materiModel');
 
-router.get('/status', apiController.getStatus);
-router.get('/materi', apiController.getMateri);
-router.get('/materi/:id', apiController.getMateriById);
-router.post('/materi', apiController.createMateri);
-router.put('/materi/:id', apiController.updateMateri);
-router.delete('/materi/:id', apiController.deleteMateri);
+const renderDashboard = async (req, res) => {
+    try {
+        const daftarMateri = await Materi.findAll({ order: [['createdAt', 'DESC']] });
+        res.render('index', { title: 'LectureSum - Dashboard', materi: daftarMateri });
+    } catch (error) {
+        res.status(500).send("Gagal memuat dashboard");
+    }
+};
 
-module.exports = router;
+const renderForm = async (req, res) => {
+    try {
+        const id = req.query.id; 
+        let materiEdit = null;
+        if (id) materiEdit = await Materi.findByPk(id);
+        
+        res.render('form', { 
+            title: materiEdit ? 'Edit Materi' : 'Tambah Materi', 
+            materi: materiEdit 
+        });
+    } catch (error) {
+        res.status(500).send("Gagal memuat form");
+    }
+};
+
+module.exports = { renderDashboard, renderForm };
